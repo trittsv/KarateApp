@@ -1,0 +1,17 @@
+[Unit]
+Description=Karate App Backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=karateapp
+Group=karateapp
+WorkingDirectory=/opt/karate-app/backend/api
+EnvironmentFile=/etc/karate-app-backend.env
+ExecStart=/opt/karate-app/backend/api/.venv/bin/gunicorn --workers 1 --threads 8 --bind 127.0.0.1:5042 app:APP
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

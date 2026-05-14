@@ -1,0 +1,40 @@
+{
+  "thirdparties": [
+    {
+      "name": "Qt",
+      "short_description": [
+        "This application uses Qt.",
+        "Qt is a C++ toolkit for cross-platform application development.",
+        "Qt provides single-source portability across major desktop, embedded, and mobile operating systems.",
+        "Qt is available under multiple licensing options designed to accommodate different development needs.",
+        "Qt licensed under GNU LGPL is appropriate for the development of Qt applications provided you comply with the terms and conditions of the respective license.",
+        "Please see https://www.qt.io/licensing for an overview of Qt licensing.",
+        "Copyright (C) 2023 The Qt Company Ltd and other contributors.",
+        "Qt and the Qt logo are trademarks of The Qt Company Ltd.",
+        "Qt is developed as an open source project. See https://www.qt.io for more information."
+      ],
+      "license_text": [
+        "GNU Lesser General Public License v3 (LGPLv3)"
+      ]
+    },
+    {
+      "name": "OpenStreetMap",
+      "short_description": [
+        "Map data provided by OpenStreetMap contributors."
+      ],
+      "license_text": [
+        "Open Database License (ODbL) v1.0",
+        "https://www.openstreetmap.org/copyright"
+      ]
+    },
+    {
+      "name": "Thunderforest",
+      "short_description": [
+        "Map tiles provided by Thunderforest."
+      ],
+      "license_text": [
+        "https://www.thunderforest.com/terms/"
+      ]
+    }
+  ]
+}

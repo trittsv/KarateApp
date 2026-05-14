@@ -1,0 +1,239 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  QT_VERSION: "6.11.1"
+
+jobs:
+  # android:
+  #   name: Android
+  #   runs-on: ubuntu-24.04
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: temurin
+  #         java-version: "17"
+
+  #     - name: Install Qt Android
+  #       uses: jurplel/install-qt-action@v4
+  #       with:
+  #         version: ${{ env.QT_VERSION }}
+  #         target: android
+  #         arch: android_arm64_v8a
+  #         modules: qtwebview qtpositioning qtlocation qtpdf
+  #         cache: true
+
+  #     - name: Configure Android
+  #       run: |
+  #         cmake -S . -B build-android \
+  #           -DCMAKE_BUILD_TYPE=Release \
+  #           -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
+  #           -DANDROID_ABI=arm64-v8a \
+  #           -DANDROID_PLATFORM=android-23 \
+  #           -DANDROID_NDK="$ANDROID_NDK_HOME" \
+  #           -DQT_HOST_PATH="$QT_HOST_PATH" \
+  #           -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
+  #           -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
+  #           -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
+  #           -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
+  #           -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
+  #           -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
+  #           -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
+  #           -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
+  #           -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
+  #           -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
+  #           -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
+  #           -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
+  #           -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
+  #           -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
+  #           -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
+  #           -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
+  #           -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
+  #           -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
+  #           -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
+  #           -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+  #           -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
+  #           -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
+  #           -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
+  #           -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+
+  #     - name: Build
+  #       run: cmake --build build-android --config Release --parallel
+
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: android-build
+  #         path: |
+  #           build-android/**/*.apk
+  #           build-android/**/*.aab
+
+  # windows:
+  #   name: Windows
+  #   runs-on: windows-2022
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Install Qt Windows
+  #       uses: jurplel/install-qt-action@v4
+  #       with:
+  #         version: ${{ env.QT_VERSION }}
+  #         host: windows
+  #         target: desktop
+  #         arch: win64_msvc2022_64
+  #         modules: qtwebview qtpositioning qtlocation qtpdf
+  #         cache: true
+
+  #     - name: Configure
+  #       shell: bash
+  #       run: |
+  #         cmake -S . -B build \
+  #           -DCMAKE_BUILD_TYPE=Release \
+  #           -DCMAKE_INSTALL_PREFIX="$PWD/build/install" \
+  #           -DQT_HOST_PATH="$QT_HOST_PATH" \
+  #           -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
+  #           -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
+  #           -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
+  #           -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
+  #           -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
+  #           -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
+  #           -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
+  #           -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
+  #           -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
+  #           -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
+  #           -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
+  #           -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
+  #           -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
+  #           -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
+  #           -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
+  #           -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
+  #           -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
+  #           -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
+  #           -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
+  #           -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+  #           -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
+  #           -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
+  #           -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
+  #           -DCMAKE_PREFIX_PATH="$Qt6_DIR"
+
+  #     - name: Build
+  #       shell: bash
+  #       run: cmake --build build --config Release --parallel
+
+  #     - name: Package
+  #       shell: bash
+  #       run: |
+  #         cpack --config build/CPackConfig.cmake -C Release
+
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: upload
+  #         path: |
+  #           build/package/*.zip
+
+  macos:
+    name: macOS
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt macOS
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: mac
+          target: desktop
+          arch: clang_64
+          modules: qtwebview qtpositioning qtlocation qtpdf
+          cache: true
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-macos \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$PWD/build-macos/install" \
+            -DQT_HOST_PATH="$QT_HOST_PATH" \
+            -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
+            -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
+            -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
+            -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
+            -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
+            -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
+            -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
+            -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
+            -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
+            -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
+            -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
+            -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
+            -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
+            -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
+            -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
+            -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
+            -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
+            -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
+            -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
+            -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+            -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
+            -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
+            -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
+            -DCMAKE_PREFIX_PATH="$Qt6_DIR"
+
+      - name: Build
+        run: cmake --build build-macos --config Release --parallel
+
+      - name: Package
+        run: |
+          cpack --config build-macos/CPackConfig.cmake -C Release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-arm64-build
+          path: |
+            build-macos/package/*.zip
+
+  # ios:
+  #   name: iOS
+  #   runs-on: macos-14
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Install Qt iOS
+  #       uses: jurplel/install-qt-action@v4
+  #       with:
+  #         version: ${{ env.QT_VERSION }}
+  #         host: mac
+  #         target: ios
+  #         modules: qtwebview qtpositioning qtlocation qtpdf
+  #         cache: true
+
+  #     - name: Configure
+  #       run: |
+  #         cmake -S . -B build-ios \
+  #           -GXcode \
+  #           -DCMAKE_SYSTEM_NAME=iOS \
+  #           -DCMAKE_OSX_SYSROOT=iphoneos \
+  #           -DCMAKE_OSX_ARCHITECTURES=arm64 \
+  #           -DCMAKE_PREFIX_PATH="$Qt6_DIR"
+
+  #     - name: Build
+  #       run: |
+  #         cmake --build build-ios --config Release --parallel
+
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ios-build
+  #         path: |
+  #           build-ios/**/*.app
+  #           build-ios/**/*.ipa
+  #           build-ios/**/*.xcarchive
