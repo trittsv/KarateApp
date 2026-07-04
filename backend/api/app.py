@@ -2,7 +2,7 @@ import hmac
 import html
 import os
 
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, request, send_from_directory
 
 from config import ADMIN_PASSWORD, ADMIN_USERNAME, LOCATIONIQ_API_KEY
 from djkb_appointments import load_appointments
@@ -164,6 +164,12 @@ def health():
         "locationiq_configured": bool(LOCATIONIQ_API_KEY),
         "geocoding": geocoding_status(),
     })
+
+
+@APP.get("/datenschutz")
+@APP.get("/privacy")
+def privacy_policy():
+    return send_from_directory("static", "datenschutz.html")
 
 
 @APP.get("/appointments")

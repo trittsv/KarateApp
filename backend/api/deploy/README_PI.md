@@ -164,6 +164,7 @@ Test:
 ```bash
 curl "https://your-ddns-host.example/health"
 curl "https://your-ddns-host.example/geocode?q=Berlin"
+curl "https://your-ddns-host.example/datenschutz"
 ```
 
 ## 9. App Endpoint
