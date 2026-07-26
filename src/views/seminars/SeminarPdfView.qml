@@ -136,6 +136,15 @@ Page {
             active: !pdfView.useWebView
             sourceComponent: qtPdfContentComponent
         }
+
+        SourceAttribution {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 12
+            sourceName: "Originaldokument beim DJKB"
+            sourceUrl: pdfView.pdfUrl
+            z: 10
+        }
     }
 
     Component {

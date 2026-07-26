@@ -76,13 +76,18 @@ KARATEAPP_ADMIN_USERNAME=admin
 KARATEAPP_ADMIN_PASSWORD=your-long-random-admin-password
 KARATEAPP_BACKEND_DATABASE=/var/lib/karate-app-backend/geocode_cache.sqlite3
 KARATEAPP_DATA_CACHE_TTL_SECONDS=600
+KARATEAPP_ANDROID_STORE_URL=https://play.google.com/store/apps/details?id=trittsv.app.karateapp
+KARATEAPP_IOS_STORE_URL=
+KARATEAPP_MACOS_DOWNLOAD_URL=https://github.com/trittsv/karate-app/releases/latest
+KARATEAPP_WINDOWS_DOWNLOAD_URL=https://github.com/trittsv/karate-app/releases/latest
+KARATEAPP_LINUX_DOWNLOAD_URL=https://github.com/trittsv/karate-app/releases/latest
 PORT=5042
 ```
 
 The admin password protects:
 
 ```text
-/
+/admin
 /stats
 /geocode/status
 ```
@@ -116,6 +121,32 @@ Logs:
 ```bash
 journalctl -u karate-app-backend -f
 ```
+
+### Updating from a development machine
+
+Run the update script from the repository checkout on your development machine:
+
+```bash
+./backend/api/deploy/update_pi.sh
+```
+
+Pass another SSH destination when needed:
+
+```bash
+./backend/api/deploy/update_pi.sh pi@192.168.1.50
+```
+
+The script:
+
+- excludes `.venv`, Python caches, macOS metadata, and `.env` files;
+- preserves or creates the Raspberry Pi's own Python environment;
+- installs the current `requirements.txt`;
+- verifies that Gunicorn is executable before restarting;
+- checks `/health` after restart and prints service logs on failure.
+
+Do not copy the complete `backend` directory with `scp -r`. A local Python
+environment contains machine-specific interpreter paths and binaries and must
+never overwrite the Raspberry Pi environment.
 
 ## 6. nginx
 
@@ -164,6 +195,8 @@ Test:
 ```bash
 curl "https://your-ddns-host.example/health"
 curl "https://your-ddns-host.example/geocode?q=Berlin"
+curl "https://your-ddns-host.example/privacy"
+curl "https://your-ddns-host.example/imprint"
 ```
 
 ## 9. App Endpoint

@@ -29,6 +29,7 @@
 #include <QtWebView>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QSettings>
 #include <QSysInfo>
 #include <QVariantMap>
 
@@ -36,46 +37,13 @@
 #include <QtWebEngineQuick>
 #endif
 
-#if defined(Q_OS_ANDROID)
-/*
-#include <QtCore/private/qandroidextras_p.h>
-bool checkPermission() {
-    auto r = QtAndroidPrivate::checkPermission("android.permission.INTERNET").result();
-    if (r == QtAndroidPrivate::Denied) {
-        r = QtAndroidPrivate::requestPermission("android.permission.INTERNET").result();
-        if (r == QtAndroidPrivate::Denied)
-            return false;
-    }
-    return true;
-}*/
-#endif
-
-#include <QtCore/QPermissions>
 #include <QtCore/QCoreApplication>
-
-void checkLocationPermission() {
-    QLocationPermission permission;
-    // Setzen Sie die Genauigkeit passend zu Ihrer Info.plist
-    permission.setAccuracy(QLocationPermission::Accuracy::Precise);
-    permission.setAvailability(QLocationPermission::Availability::WhenInUse);
-
-    QCoreApplication::instance()->requestPermission(permission, [](const QPermission &requestedPermission) {
-        if (requestedPermission.status() == Qt::PermissionStatus::Granted) {
-            // Starten Sie hier Ihre Standortermittlung
-            LOG_INFO << "Starten Sie hier Ihre Standortermittlung";
-
-        } else {
-            // Fehlerbehandlung: Zugriff verweigert
-            LOG_WARN << "Location blocked!";
-        }
-    });
-}
 
 int main(int argc, char *argv[]) {
 
     setThreadName("karateapp.main");
 
-    setupLogger(LogLevel::All);
+    setupLogger(defaultLogLevel());
 
     qputenv("QT_WEBVIEW_PLUGIN", QByteArray("native"));
 #if defined(Q_OS_WIN)
@@ -93,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
     QSettings::setDefaultFormat(QSettings::IniFormat);
-    QApplication::setOrganizationName("trittler.sven.apps");
+    QApplication::setOrganizationName("trittsv.app");
     QApplication::setApplicationName("karateapp");
 
     // showAllFilesInResource();
@@ -144,20 +112,10 @@ int main(int argc, char *argv[]) {
     newsScraper.loadFirstPage();
 
     QQmlApplicationEngine engine;
-    const auto identifierText = [](const QByteArray &identifier) {
-        return identifier.isEmpty()
-            ? QStringLiteral("Nicht verfügbar")
-            : QString::fromUtf8(identifier);
-    };
     const QVariantMap systemInfo {
-        { "bootUniqueId", identifierText(QSysInfo::bootUniqueId()) },
-        { "buildAbi", QSysInfo::buildAbi() },
-        { "buildCpuArchitecture", QSysInfo::buildCpuArchitecture() },
         { "currentCpuArchitecture", QSysInfo::currentCpuArchitecture() },
         { "kernelType", QSysInfo::kernelType() },
         { "kernelVersion", QSysInfo::kernelVersion() },
-        { "machineHostName", QSysInfo::machineHostName() },
-        { "machineUniqueId", identifierText(QSysInfo::machineUniqueId()) },
         { "prettyProductName", QSysInfo::prettyProductName() },
         { "productType", QSysInfo::productType() },
         { "productVersion", QSysInfo::productVersion() }
@@ -197,12 +155,6 @@ int main(int argc, char *argv[]) {
 
     LOG_INFO << "Load qml ...";
     engine.load(url);
-
-#if defined(Q_OS_ANDROID)
-    //checkPermission();
-#endif
-
-    checkLocationPermission();
 
     LOG_INFO << "Enter main loop ..";
     return app.exec();

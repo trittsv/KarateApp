@@ -171,6 +171,12 @@ Page {
                     djkbGalleryScraper.loadAlbums(albumsView.yearUrl)
                 }
             }
+
+            SourceAttribution {
+                width: parent.width
+                sourceName: "DJKB Bildergalerie " + albumsView.yearTitle
+                sourceUrl: albumsView.yearUrl
+            }
         }
     }
 }

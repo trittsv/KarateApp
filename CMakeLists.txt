@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.16)
 
 set(QT_CREATOR_SKIP_CONAN_SETUP ON)
 
-project(KarateApp VERSION 1.0.0 LANGUAGES CXX)
-set(KARATEAPP_ANDROID_VERSION_CODE 1) # Increment for each version
+project(KarateApp VERSION 1.1.0 LANGUAGES CXX)
+set(KARATEAPP_ANDROID_VERSION_CODE 2) # Increment for each version
 set(KARATEAPP_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
@@ -36,6 +36,7 @@ find_package(Qt6 6.11.1
 )
 message(STATUS "Found Qt6 version: ${Qt6_VERSION}")
 qt_standard_project_setup()
+qt_policy(SET QTP0002 NEW)
 
 execute_process(
     COMMAND git rev-parse --short=10 HEAD
@@ -122,6 +123,10 @@ message(STATUS "Source files: ${SOURCES}")
 
 qt_add_executable(KarateApp ${SOURCES})
 
+target_compile_definitions(KarateApp PRIVATE
+    $<$<CONFIG:Debug>:KARATEAPP_DEBUG_LOGGING>
+)
+
 set_source_files_properties(src/views/Constants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 qt_add_resources(KarateApp "KarateApp"
     PREFIX "/KarateApp"
@@ -133,6 +138,7 @@ qt_add_resources(KarateApp "KarateApp"
         src/views/Constants.qml
         src/views/AppToolBar.qml
         src/views/AppBusyIndicator.qml
+        src/views/SourceAttribution.qml
         src/views/qmldir
         src/views/seminars/SeminarView.qml
         src/views/seminars/SeminarToolbar.qml
@@ -141,11 +147,10 @@ qt_add_resources(KarateApp "KarateApp"
         src/views/seminars/SeminarMarker.qml
         src/views/seminars/SeminarList.qml
         src/views/seminars/SeminarDetailView.qml
-        src/views/about/AboutView.qml
+        src/views/about/LegalView.qml
         src/views/about/AppInfoView.qml
         src/views/about/SettingsView.qml
         src/views/about/LicenceView.qml
-        src/views/about/Imprint.qml
         src/views/seminars/SeminarPdfView.qml
         src/views/news/NewsView.qml
         src/views/news/NewsDetailView.qml
@@ -191,7 +196,7 @@ elseif(ANDROID)
     FetchContent_Declare(
       android_openssl
       DOWNLOAD_EXTRACT_TIMESTAMP true
-      URL      https://github.com/KDAB/android_openssl/archive/8cd5e081af4e84cdff0ddc0d17b1fe90672a4d69.zip
+      URL      https://github.com/KDAB/android_openssl/archive/b71f1470962019bd89534a2919f5925f93bc5779.zip
     )
     FetchContent_MakeAvailable(android_openssl)
     include(${android_openssl_SOURCE_DIR}/android_openssl.cmake)

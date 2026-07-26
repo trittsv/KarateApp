@@ -205,6 +205,12 @@ Page {
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
+
+                    SourceAttribution {
+                        sourceName: "Originalartikel beim DJKB"
+                        sourceUrl: newsDetailView.articleUrl
+                        Layout.fillWidth: true
+                    }
                 }
             }
 
@@ -381,6 +387,17 @@ Page {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
+            }
+
+            SourceAttribution {
+                anchors.left: parent.left
+                anchors.leftMargin: 18
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 18
+                sourceName: "DJKB"
+                sourceUrl: newsDetailView.articleUrl
+                lightText: true
+                z: 10
             }
 
                 Rectangle {

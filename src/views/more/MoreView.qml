@@ -43,6 +43,10 @@ Page {
                 Layout.preferredHeight: 2
             }
 
+            SectionLabel {
+                text: "Weitere Inhalte"
+            }
+
             NavigationTile {
                 title: "Dojos"
                 description: "DJKB-Vereine nach Name, PLZ oder Ort finden"
@@ -69,18 +73,22 @@ Page {
             }
 
             SectionLabel {
-                text: "Info"
+                text: "Einstellungen"
                 Layout.topMargin: 8
             }
 
             NavigationTile {
-                title: "Über"
-                description: "Einstellungen, Impressum und Lizenzen"
-                iconSource: "qrc:/KarateApp/res/icons/info.svg"
+                title: "Einstellungen"
+                description: "Darstellung und Verhalten anpassen"
+                iconSource: "qrc:/KarateApp/res/icons/more.svg"
                 onClicked: pushMainContent(
-                    "qrc:/KarateApp/src/views/about/AboutView.qml",
-                    { showBackButton: true }
+                    "qrc:/KarateApp/src/views/about/SettingsView.qml"
                 )
+            }
+
+            SectionLabel {
+                text: "Hilfe und Feedback"
+                Layout.topMargin: 8
             }
 
             NavigationTile {
@@ -92,8 +100,17 @@ Page {
                 )
             }
 
+            NavigationTile {
+                title: "Rechtliches und Datenschutz"
+                description: "Datenschutz, Impressum und Lizenzen"
+                iconSource: "qrc:/KarateApp/res/icons/info.svg"
+                onClicked: pushMainContent(
+                    "qrc:/KarateApp/src/views/about/LegalView.qml"
+                )
+            }
+
             Label {
-                text: "Made with ❤️ OSS!"
+                text: "Made with ❤️ OSS!\nVersion " + KARATEAPP_VERSION
                 opacity: 0.5
                 font.pixelSize: 13
                 horizontalAlignment: Text.AlignHCenter

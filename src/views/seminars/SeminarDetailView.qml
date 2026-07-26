@@ -165,6 +165,16 @@ Page {
                 }
             }
 
+            SourceAttribution {
+                sourceName: "Termininformationen beim DJKB"
+                sourceUrl: pdfUrl !== ""
+                           ? pdfUrl
+                           : "https://www.djkb.com/termine/"
+                Layout.fillWidth: true
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
+            }
+
             Item {
                 Layout.preferredHeight: 24
             }

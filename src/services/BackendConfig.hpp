@@ -4,9 +4,7 @@
 #pragma once
 
 #include <QNetworkRequest>
-#include <QSettings>
 #include <QString>
-#include <QUuid>
 
 namespace BackendConfig {
 inline const QString BaseUrl = QStringLiteral("https://karate-api.ddns.net");
@@ -29,21 +27,9 @@ inline QString platformName() {
 #endif
 }
 
-inline QString clientId() {
-    QSettings settings;
-    const QString key = QStringLiteral("Backend/clientId");
-    QString id = settings.value(key).toString();
-    if (id.isEmpty()) {
-        id = QUuid::createUuid().toString(QUuid::WithoutBraces);
-        settings.setValue(key, id);
-    }
-    return id;
-}
-
 inline void applyDefaultHeaders(QNetworkRequest &request) {
     request.setTransferTimeout(TimeoutMs);
     request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-KarateApp-Client-Id", clientId().toUtf8());
     request.setRawHeader("X-KarateApp-Platform", platformName().toUtf8());
     request.setHeader(
         QNetworkRequest::UserAgentHeader,

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}KarateApp{% endblock %}
+
+{% block content %}
+<header>
+    <h1>KarateApp</h1>
+</header>
+
+<section id="downloads" class="download-section" aria-labelledby="mobile-downloads-title">
+    <h2 id="mobile-downloads-title">Apps</h2>
+    <nav class="mobile-downloads" aria-label="Mobile Downloads">
+        {% for item in mobile_downloads %}
+            <a class="download {{ 'disabled' if not item.url else '' }}"
+               {% if item.url %}href="{{ item.url }}"{% else %}aria-disabled="true"{% endif %}>
+                <span>{{ item.label }}</span>
+                <small>{{ item.detail if item.url else item.detail + " demnaechst" }}</small>
+            </a>
+        {% endfor %}
+    </nav>
+</section>
+
+{# Desktop downloads remain hidden until supported builds are published.
+<section class="download-section" aria-labelledby="desktop-downloads-title">
+    <div class="desktop-panel">
+        <h2 id="desktop-downloads-title">Desktop</h2>
+        <nav class="desktop-downloads" aria-label="Desktop Downloads">
+            {% for item in desktop_downloads %}
+                <a class="download {{ 'disabled' if not item.url else '' }}"
+                   {% if item.url %}href="{{ item.url }}"{% else %}aria-disabled="true"{% endif %}>
+                    <span>{{ item.label }}</span>
+                    <small>{{ item.detail if item.url else item.detail + " demnaechst" }}</small>
+                </a>
+            {% endfor %}
+        </nav>
+    </div>
+</section>
+#}
+{% endblock %}

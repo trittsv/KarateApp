@@ -44,7 +44,10 @@ Item {
     ]
 
     Component.onCompleted: {
-        checkAndStartLocation()
+        if (locPermission.status === Qt.PermissionStatus.Granted)
+            posSource.active = true
+        else if (radiusFilterEnabled)
+            checkAndStartLocation()
         seminarProxyModel.maxDistanceKm =
                 radiusFilterEnabled && hasUserPosition ? mapRadiusKm : -1
 
@@ -161,6 +164,8 @@ Item {
     function setRadiusFilterEnabled(enabled) {
         radiusFilterEnabled = enabled
         seminarSettings.radiusFilterEnabled = enabled
+        if (enabled)
+            checkAndStartLocation()
         seminarProxyModel.maxDistanceKm =
                 radiusFilterEnabled && hasUserPosition ? mapRadiusKm : -1
         rebuildSeminarMarkers()
@@ -176,13 +181,13 @@ Item {
         return lastMarkerRebuildCoordinate.distanceTo(coord) >= 1000
     }
 
-    function checkAndStartLocation() {
+    function checkAndStartLocation(retryDenied) {
         console.log("checkAndStartLocation", locPermission.status)
 
         if (locPermission.status === Qt.PermissionStatus.Granted) {
             posSource.active = true
-            posSource.start()
-        } else if (locPermission.status === Qt.PermissionStatus.Undetermined) {
+        } else if (locPermission.status === Qt.PermissionStatus.Undetermined
+                   || retryDenied === true) {
             console.log("Request permission")
             locPermission.request()
         } else {
@@ -345,6 +350,7 @@ Item {
             radiusFilterEnabled: seminarViewId.radiusFilterEnabled
             radiusKm: seminarViewId.mapRadiusKm
             eventTypeFilters: seminarViewId.eventTypeFilters
+            onLocationRequested: seminarViewId.checkAndStartLocation(true)
             onToggleViewRequested: {
                 seminarViewId.showListView = !seminarViewId.showListView
                 if (!seminarViewId.showListView)
@@ -352,6 +358,8 @@ Item {
             }
             onSortByDistanceRequested: function(enabled) {
                 seminarViewId.sortByDistance = enabled
+                if (enabled)
+                    seminarViewId.checkAndStartLocation()
                 seminarProxyModel.sortByDistance = enabled
             }
             onEventTypeFiltersRequested: function(filters) {
@@ -447,6 +455,8 @@ Item {
 
     LocationPermission {
         id: locPermission
+        accuracy: LocationPermission.Approximate
+        availability: LocationPermission.WhenInUse
     }
 
     Connections {

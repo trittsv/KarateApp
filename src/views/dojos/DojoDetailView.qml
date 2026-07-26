@@ -169,12 +169,12 @@ Page {
                 }
             }
 
-            Label {
-                text: "Quelle: DJKB Dojo-Verzeichnis"
-                font.pixelSize: 12
-                color: Constants.tertiaryTextColor(rootWindow.isDarkMode)
-                horizontalAlignment: Text.AlignHCenter
+            SourceAttribution {
+                sourceName: "DJKB Dojo-Verzeichnis"
+                sourceUrl: "https://www.djkb.com/jka-in-deutschland/djkb-dojos/"
                 Layout.fillWidth: true
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
             }
 
             Item {

@@ -109,37 +109,8 @@ Page {
                 title: "Hardware"
 
                 InfoRow {
-                    title: "Build-CPU"
-                    value: KARATEAPP_SYSTEM_INFO.buildCpuArchitecture
-                }
-
-                InfoRow {
                     title: "Aktuelle CPU"
                     value: KARATEAPP_SYSTEM_INFO.currentCpuArchitecture
-                }
-
-                InfoRow {
-                    title: "Build-ABI"
-                    value: KARATEAPP_SYSTEM_INFO.buildAbi
-                }
-            }
-
-            InfoCard {
-                title: "Geräteinformationen"
-
-                InfoRow {
-                    title: "Hostname"
-                    value: KARATEAPP_SYSTEM_INFO.machineHostName
-                }
-
-                InfoRow {
-                    title: "Boot-ID"
-                    value: KARATEAPP_SYSTEM_INFO.bootUniqueId
-                }
-
-                InfoRow {
-                    title: "Geräte-ID"
-                    value: KARATEAPP_SYSTEM_INFO.machineUniqueId
                 }
             }
 

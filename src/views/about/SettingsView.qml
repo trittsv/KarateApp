@@ -170,17 +170,6 @@ Page {
                 }
             }
 
-            Label {
-                text: "Daten"
-                font.pixelSize: 14
-                font.bold: true
-                color: Constants.secondaryTextColor(rootWindow.isDarkMode)
-                Layout.fillWidth: true
-                Layout.leftMargin: 20
-                Layout.rightMargin: 20
-                Layout.topMargin: 10
-            }
-
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
