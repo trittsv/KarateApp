@@ -5,7 +5,6 @@ package trittsv.app.karateapp;
 
 import android.content.Context;
 import android.os.Vibrator;
-import android.os.Build;
 import android.os.VibrationEffect;
 import android.util.Log;
 import android.content.ContentResolver;
@@ -45,13 +44,11 @@ public class Utils {
     /// @brief Vibrates the phone for 100ms.
     public static void vibrate(Context context) {
         Log.d("trittsv.app.karateapp.Utils.vibrate", "vibrate");
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        int durationInMs = 100;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(durationInMs, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            //deprecated in API 26 
-            v.vibrate(durationInMs);
+        Vibrator vibrator = context.getSystemService(Vibrator.class);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
+            );
         }
     }
 
