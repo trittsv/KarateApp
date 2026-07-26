@@ -25,9 +25,9 @@
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>1.0</string>
+        <string>${MACOSX_BUNDLE_BUNDLE_VERSION}</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.0</string>
+        <string>${MACOSX_BUNDLE_SHORT_VERSION_STRING}</string>
 
 <key>NSLocationUsageDescription</key>
 <string>Diese App benötigt Zugriff auf Ihren Standort, um Karten und Navigation anzuzeigen.</string>
@@ -51,4 +51,3 @@
         </array>
 </dict>
 </plist>
-

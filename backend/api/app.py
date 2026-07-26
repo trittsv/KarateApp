@@ -144,6 +144,17 @@ def imprint_redirect():
     return redirect("/imprint", code=301)
 
 
+@APP.get("/support")
+def support():
+    return render_template("support.html", active_page="support")
+
+
+@APP.get("/hilfe")
+@APP.get("/support.html")
+def support_redirect():
+    return redirect("/support", code=301)
+
+
 @APP.get("/static/store/<path:filename>")
 def store_asset(filename):
     return send_from_directory("../../res/store/google-play", filename)
