@@ -2,7 +2,7 @@ import hmac
 import html
 import os
 
-from flask import Flask, Response, jsonify, request, send_from_directory
+from flask import Flask, Response, jsonify, redirect, render_template, request, send_from_directory
 
 from config import ADMIN_PASSWORD, ADMIN_USERNAME, LOCATIONIQ_API_KEY
 from djkb_appointments import load_appointments
@@ -25,7 +25,7 @@ from ram_cache import (
 
 APP = Flask(__name__)
 PROTECTED_PATHS = {
-    "/",
+    "/admin",
     "/admin/geocode-cache/clear",
     "/stats",
     "/geocode/status"
@@ -82,79 +82,61 @@ def record_request_statistics(response):
 
 
 @APP.get("/")
-def index():
+def home():
+    mobile_downloads = [
+        {
+            "label": "Android",
+            "detail": "Google Play",
+            "url": os.environ.get(
+                "KARATEAPP_ANDROID_STORE_URL",
+                "https://play.google.com/store/apps/details?id=trittsv.app.karateapp",
+            ),
+        },
+        {
+            "label": "iOS",
+            "detail": "App Store",
+            "url": os.environ.get("KARATEAPP_IOS_STORE_URL", ""),
+        },
+    ]
+    desktop_downloads = [
+        {
+            "label": "macOS",
+            "detail": "Download",
+            "url": os.environ.get(
+                "KARATEAPP_MACOS_DOWNLOAD_URL",
+                "https://github.com/trittsv/karate-app/releases/latest",
+            ),
+        },
+        {
+            "label": "Windows",
+            "detail": "Download",
+            "url": os.environ.get(
+                "KARATEAPP_WINDOWS_DOWNLOAD_URL",
+                "https://github.com/trittsv/karate-app/releases/latest",
+            ),
+        },
+        {
+            "label": "Linux",
+            "detail": "Download",
+            "url": os.environ.get(
+                "KARATEAPP_LINUX_DOWNLOAD_URL",
+                "https://github.com/trittsv/karate-app/releases/latest",
+            ),
+        },
+    ]
+    return render_template(
+        "home.html",
+        active_page="downloads",
+        mobile_downloads=mobile_downloads,
+        desktop_downloads=desktop_downloads,
+    )
+
+
+@APP.get("/admin")
+def admin():
     status = geocoding_status()
     stats = access_summary()
-    geocoding_text = "yes" if status["geocoding"] else "no"
-    waiting_text = "yes" if status["waiting"] else "no"
-    current_query = html.escape(status["current_query"] or "-")
-    platform_rows = "\n".join(
-        f"<tr><td>{html.escape(row['platform'])}</td><td>{row['users']}</td><td>{row['requests']}</td></tr>"
-        for row in stats["by_platform"]
-    ) or "<tr><td colspan=\"3\">No app requests yet</td></tr>"
-    path_rows = "\n".join(
-        f"<tr><td>{html.escape(row['path'])}</td><td>{row['count']}</td></tr>"
-        for row in stats["by_path"][:8]
-    ) or "<tr><td colspan=\"2\">No app requests yet</td></tr>"
-    return Response(f"""<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="3">
-    <title>Karate App Backend</title>
-    <style>
-        body {{ font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 2rem; line-height: 1.45; }}
-        header {{ display: flex; align-items: center; justify-content: space-between; gap: 1rem; }}
-        .badge {{ display: inline-block; padding: .2rem .55rem; border-radius: 999px; background: #eee; }}
-        .active {{ background: #ffe0e0; color: #9b111e; }}
-        dl {{ display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1rem; }}
-        dt {{ font-weight: 600; }}
-        table {{ border-collapse: collapse; min-width: min(100%, 42rem); margin: 1rem 0 2rem; }}
-        th, td {{ border-bottom: 1px solid #e4e4e7; padding: .55rem .7rem; text-align: left; }}
-        th {{ background: #f7f7f9; }}
-        button {{ border: 1px solid #d4d4d8; border-radius: .55rem; background: #fff; padding: .55rem .8rem; cursor: pointer; }}
-        button.danger {{ color: #9b111e; border-color: #f3b6bd; background: #fff5f5; }}
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Karate App Backend</h1>
-    </header>
-    <h2>Usage</h2>
-    <dl>
-        <dt>Users total</dt><dd>{stats["total_users"]}</dd>
-        <dt>Users last 24h</dt><dd>{stats["last_24h_users"]}</dd>
-        <dt>Requests total</dt><dd>{stats["total_requests"]}</dd>
-        <dt>Requests last 24h</dt><dd>{stats["last_24h_requests"]}</dd>
-    </dl>
-    <h2>Devices</h2>
-    <table>
-        <thead><tr><th>Platform</th><th>Users</th><th>Requests</th></tr></thead>
-        <tbody>{platform_rows}</tbody>
-    </table>
-    <h2>Top endpoints</h2>
-    <table>
-        <thead><tr><th>Path</th><th>Requests</th></tr></thead>
-        <tbody>{path_rows}</tbody>
-    </table>
-    <h2>Geocoding</h2>
-    <p class="badge {'active' if status["geocoding"] else ''}">Geocoding: {geocoding_text}</p>
-    <dl>
-        <dt>Waiting</dt><dd>{waiting_text}</dd>
-        <dt>Active requests</dt><dd>{status["active_requests"]}</dd>
-        <dt>Waiting requests</dt><dd>{status["waiting_requests"]}</dd>
-        <dt>Current query</dt><dd>{current_query}</dd>
-        <dt>Last started</dt><dd>{status["last_started_at"] or "-"}</dd>
-        <dt>Last finished</dt><dd>{status["last_finished_at"] or "-"}</dd>
-    </dl>
-    <form method="post" action="/admin/geocode-cache/clear">
-        <button class="danger" type="submit">Clear geocode cache</button>
-    </form>
-    <p><a href="/health">Health</a> · <a href="/geocode/status">Geocode status JSON</a> · <a href="/stats">Stats JSON</a></p>
-</body>
-</html>
-""", mimetype="text/html")
+    return render_template("admin.html", stats=stats, status=status)
 
 
 @APP.get("/health")
@@ -169,7 +151,36 @@ def health():
 @APP.get("/datenschutz")
 @APP.get("/privacy")
 def privacy_policy():
-    return send_from_directory("static", "datenschutz.html")
+    return render_template("privacy.html", active_page="privacy")
+
+
+@APP.get("/datenschutz.html")
+@APP.get("/privacy.html")
+def privacy_policy_redirect():
+    return redirect("/datenschutz", code=301)
+
+
+@APP.get("/static/store/<path:filename>")
+def store_asset(filename):
+    return send_from_directory("../../res/store/google-play", filename)
+
+
+@APP.get("/favicon.ico")
+def favicon():
+    return send_from_directory(
+        "../../res/store/google-play",
+        "google-play-icon-512.png",
+        mimetype="image/png",
+    )
+
+
+@APP.get("/apple-touch-icon.png")
+def apple_touch_icon():
+    return send_from_directory(
+        "../../res/store/google-play",
+        "google-play-icon-512.png",
+        mimetype="image/png",
+    )
 
 
 @APP.get("/appointments")

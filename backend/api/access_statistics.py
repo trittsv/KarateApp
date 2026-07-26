@@ -6,6 +6,7 @@ from config import DATABASE_PATH
 
 IGNORED_PATHS = {
     "/",
+    "/admin",
     "/health",
     "/geocode/status",
     "/stats",

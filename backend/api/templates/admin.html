@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="3">
+    <title>Karate App Admin</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 2rem;
+            line-height: 1.45;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .2rem .55rem;
+            border-radius: 999px;
+            background: #eee;
+        }
+
+        .active {
+            background: #ffe0e0;
+            color: #9b111e;
+        }
+
+        dl {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: .4rem 1rem;
+        }
+
+        dt {
+            font-weight: 600;
+        }
+
+        table {
+            border-collapse: collapse;
+            min-width: min(100%, 42rem);
+            margin: 1rem 0 2rem;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid #e4e4e7;
+            padding: .55rem .7rem;
+            text-align: left;
+        }
+
+        th {
+            background: #f7f7f9;
+        }
+
+        button {
+            border: 1px solid #d4d4d8;
+            border-radius: .55rem;
+            background: #fff;
+            padding: .55rem .8rem;
+            cursor: pointer;
+        }
+
+        button.danger {
+            color: #9b111e;
+            border-color: #f3b6bd;
+            background: #fff5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Karate App Admin</h1>
+    </header>
+
+    <h2>Usage</h2>
+    <dl>
+        <dt>Users total</dt><dd>{{ stats.total_users }}</dd>
+        <dt>Users last 24h</dt><dd>{{ stats.last_24h_users }}</dd>
+        <dt>Requests total</dt><dd>{{ stats.total_requests }}</dd>
+        <dt>Requests last 24h</dt><dd>{{ stats.last_24h_requests }}</dd>
+    </dl>
+
+    <h2>Devices</h2>
+    <table>
+        <thead>
+            <tr><th>Platform</th><th>Users</th><th>Requests</th></tr>
+        </thead>
+        <tbody>
+            {% for row in stats.by_platform %}
+                <tr><td>{{ row.platform }}</td><td>{{ row.users }}</td><td>{{ row.requests }}</td></tr>
+            {% else %}
+                <tr><td colspan="3">No app requests yet</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Top endpoints</h2>
+    <table>
+        <thead>
+            <tr><th>Path</th><th>Requests</th></tr>
+        </thead>
+        <tbody>
+            {% for row in stats.by_path[:8] %}
+                <tr><td>{{ row.path }}</td><td>{{ row.count }}</td></tr>
+            {% else %}
+                <tr><td colspan="2">No app requests yet</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Geocoding</h2>
+    <p class="badge {{ 'active' if status.geocoding else '' }}">Geocoding: {{ 'yes' if status.geocoding else 'no' }}</p>
+    <dl>
+        <dt>Waiting</dt><dd>{{ 'yes' if status.waiting else 'no' }}</dd>
+        <dt>Active requests</dt><dd>{{ status.active_requests }}</dd>
+        <dt>Waiting requests</dt><dd>{{ status.waiting_requests }}</dd>
+        <dt>Current query</dt><dd>{{ status.current_query or '-' }}</dd>
+        <dt>Last started</dt><dd>{{ status.last_started_at or '-' }}</dd>
+        <dt>Last finished</dt><dd>{{ status.last_finished_at or '-' }}</dd>
+    </dl>
+
+    <form method="post" action="/admin/geocode-cache/clear">
+        <button class="danger" type="submit">Clear geocode cache</button>
+    </form>
+
+    <p><a href="/">Home</a> · <a href="/health">Health</a> · <a href="/geocode/status">Geocode status JSON</a> · <a href="/stats">Stats JSON</a></p>
+</body>
+</html>

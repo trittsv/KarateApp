@@ -4,13 +4,15 @@ Small Flask backend for DJKB parsing and geocoding. The mobile/desktop app asks
 this service for parsed JSON; only the backend talks to the DJKB website and
 LocationIQ.
 
-The root page (`GET /`) shows a small backend dashboard with geocoding status,
+The root page (`GET /`) shows the public Karate App download page. The admin
+page (`GET /admin`) shows a small backend dashboard with geocoding status,
 request counts, approximate users, and platform split.
 
 ## Endpoints
 
 ```text
 GET /health
+GET /admin
 GET /stats
 GET /geocode?q=74321 Bietigheim-Bissingen
 GET /geocode/status
