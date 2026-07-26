@@ -60,7 +60,7 @@ Page {
                 spacing: 8
 
                 Label {
-                    text: "Karate App"
+                    text: "KarateApp"
                     font.pixelSize: 20
                     font.bold: true
                     Layout.fillWidth: true

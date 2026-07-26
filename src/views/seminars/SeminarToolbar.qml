@@ -83,7 +83,7 @@ AppToolBar {
             Layout.alignment: Qt.AlignVCenter
 
             Label {
-                text: "Karate App"
+                text: "KarateApp"
                 font.bold: true
                 Layout.fillWidth: true
             }
