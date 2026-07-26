@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
     QSettings::setDefaultFormat(QSettings::IniFormat);
-    QApplication::setOrganizationName("trittler.sven.apps");
+    QApplication::setOrganizationName("trittsv.app");
     QApplication::setApplicationName("karateapp");
 
     // showAllFilesInResource();
