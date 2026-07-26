@@ -30,6 +30,7 @@ AppToolBar {
     ]
 
     signal toggleViewRequested()
+    signal locationRequested()
     signal sortByDistanceRequested(bool enabled)
     signal eventTypeFiltersRequested(var filters)
     signal radiusFilterEnabledRequested(bool enabled)
@@ -87,21 +88,47 @@ AppToolBar {
                 Layout.fillWidth: true
             }
 
-            Label {
-                text: "Datenquelle: djkb.com"
-                font.pixelSize: 10
-                color: Constants.tertiaryTextColor(rootWindow.isDarkMode)
-                elide: Text.ElideRight
+            Item {
+                id: seminarSourceLink
+
+                implicitHeight: 10
                 Layout.fillWidth: true
+
+                Accessible.role: Accessible.Link
+                Accessible.name: "Quelle der Termine öffnen: DJKB"
+                Accessible.onPressAction:
+                    Qt.openUrlExternally("https://www.djkb.com/termine/")
+
+                Label {
+                    anchors.fill: parent
+                    text: "Termine - Quelle: DJKB"
+                    font.pixelSize: 8
+                    font.underline: seminarSourceHover.hovered
+                    color: Constants.tertiaryTextColor(rootWindow.isDarkMode)
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                HoverHandler {
+                    id: seminarSourceHover
+                    cursorShape: Qt.PointingHandCursor
+                }
+
+                TapHandler {
+                    onTapped:
+                        Qt.openUrlExternally("https://www.djkb.com/termine/")
+                }
             }
         }
 
-        Label {
+        ToolButton {
             visible: !seminarToolbar.hasUserPosition
-            text: seminarToolbar.locationPermissionGranted ? "Kein GPS" : "Standort aus"
+                     && !seminarToolbar.locationPermissionGranted
+            text: "Standort aktivieren"
             font.pixelSize: 12
-            color: Constants.destructiveColor
+            Accessible.name: "Standort aktivieren"
             Layout.rightMargin: 8
+            onClicked: seminarToolbar.locationRequested()
         }
 
         RowLayout {

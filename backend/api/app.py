@@ -73,7 +73,6 @@ def record_request_statistics(response):
         record_access(
             path=request.path,
             platform=request.headers.get("X-KarateApp-Platform", ""),
-            client_id=request.headers.get("X-KarateApp-Client-Id", ""),
         )
     except Exception:
         APP.logger.exception("failed to record access statistics")
@@ -98,37 +97,10 @@ def home():
             "url": os.environ.get("KARATEAPP_IOS_STORE_URL", ""),
         },
     ]
-    desktop_downloads = [
-        {
-            "label": "macOS",
-            "detail": "Download",
-            "url": os.environ.get(
-                "KARATEAPP_MACOS_DOWNLOAD_URL",
-                "https://github.com/trittsv/karate-app/releases/latest",
-            ),
-        },
-        {
-            "label": "Windows",
-            "detail": "Download",
-            "url": os.environ.get(
-                "KARATEAPP_WINDOWS_DOWNLOAD_URL",
-                "https://github.com/trittsv/karate-app/releases/latest",
-            ),
-        },
-        {
-            "label": "Linux",
-            "detail": "Download",
-            "url": os.environ.get(
-                "KARATEAPP_LINUX_DOWNLOAD_URL",
-                "https://github.com/trittsv/karate-app/releases/latest",
-            ),
-        },
-    ]
     return render_template(
         "home.html",
         active_page="downloads",
         mobile_downloads=mobile_downloads,
-        desktop_downloads=desktop_downloads,
     )
 
 
@@ -148,16 +120,28 @@ def health():
     })
 
 
-@APP.get("/datenschutz")
 @APP.get("/privacy")
 def privacy_policy():
     return render_template("privacy.html", active_page="privacy")
 
 
+@APP.get("/datenschutz")
 @APP.get("/datenschutz.html")
 @APP.get("/privacy.html")
 def privacy_policy_redirect():
-    return redirect("/datenschutz", code=301)
+    return redirect("/privacy", code=301)
+
+
+@APP.get("/imprint")
+def imprint():
+    return render_template("imprint.html", active_page="imprint")
+
+
+@APP.get("/impressum")
+@APP.get("/impressum.html")
+@APP.get("/imprint.html")
+def imprint_redirect():
+    return redirect("/imprint", code=301)
 
 
 @APP.get("/static/store/<path:filename>")

@@ -151,6 +151,12 @@ Page {
                     color: Constants.tertiaryTextColor(rootWindow.isDarkMode)
                     horizontalAlignment: Text.AlignHCenter
                 }
+
+                SourceAttribution {
+                    width: parent.width
+                    sourceName: "DJKB Fotoalbum"
+                    sourceUrl: photosView.albumUrl
+                }
             }
         }
     }
@@ -415,6 +421,17 @@ Page {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
+                }
+
+                SourceAttribution {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 18
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 18
+                    sourceName: "DJKB"
+                    sourceUrl: photosView.albumUrl
+                    lightText: true
+                    z: 10
                 }
 
                 ToolButton {

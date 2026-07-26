@@ -36,6 +36,7 @@ find_package(Qt6 6.11.1
 )
 message(STATUS "Found Qt6 version: ${Qt6_VERSION}")
 qt_standard_project_setup()
+qt_policy(SET QTP0002 NEW)
 
 execute_process(
     COMMAND git rev-parse --short=10 HEAD
@@ -122,6 +123,10 @@ message(STATUS "Source files: ${SOURCES}")
 
 qt_add_executable(KarateApp ${SOURCES})
 
+target_compile_definitions(KarateApp PRIVATE
+    $<$<CONFIG:Debug>:KARATEAPP_DEBUG_LOGGING>
+)
+
 set_source_files_properties(src/views/Constants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 qt_add_resources(KarateApp "KarateApp"
     PREFIX "/KarateApp"
@@ -133,6 +138,7 @@ qt_add_resources(KarateApp "KarateApp"
         src/views/Constants.qml
         src/views/AppToolBar.qml
         src/views/AppBusyIndicator.qml
+        src/views/SourceAttribution.qml
         src/views/qmldir
         src/views/seminars/SeminarView.qml
         src/views/seminars/SeminarToolbar.qml
@@ -141,11 +147,10 @@ qt_add_resources(KarateApp "KarateApp"
         src/views/seminars/SeminarMarker.qml
         src/views/seminars/SeminarList.qml
         src/views/seminars/SeminarDetailView.qml
-        src/views/about/AboutView.qml
+        src/views/about/LegalView.qml
         src/views/about/AppInfoView.qml
         src/views/about/SettingsView.qml
         src/views/about/LicenceView.qml
-        src/views/about/Imprint.qml
         src/views/seminars/SeminarPdfView.qml
         src/views/news/NewsView.qml
         src/views/news/NewsDetailView.qml

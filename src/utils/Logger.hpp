@@ -5,6 +5,7 @@
 
 #include "StreamingOperators.hpp"
 
+#include <atomic>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -33,6 +34,10 @@ inline int toLogLevelValue(LogLevel level) {
     return static_cast<int>(level);
 }
 
+inline std::atomic<int> configuredLogLevel {
+    toLogLevelValue(LogLevel::Warning)
+};
+
 class LogStream {
 
 public:
@@ -43,6 +48,9 @@ public:
         , m_line(line) {}
 
     ~LogStream() {
+        if (m_level > configuredLogLevel.load(std::memory_order_relaxed))
+            return;
+
         const std::string fileName = m_file.startsWith("qrc:")
             ? m_file.toStdString()
             : QFileInfo(m_file).fileName().toStdString();
@@ -138,8 +146,40 @@ inline void qtlogMessageHandler(QtMsgType type, const QMessageLogContext &contex
 }
 
 inline void setupLogger(LogLevel level) {
-    Q_UNUSED(level)
+    configuredLogLevel.store(
+        toLogLevelValue(level),
+        std::memory_order_relaxed
+    );
     qInstallMessageHandler(qtlogMessageHandler);
+}
+
+inline LogLevel defaultLogLevel() {
+#if defined(KARATEAPP_DEBUG_LOGGING)
+    const LogLevel buildDefault = LogLevel::Debug;
+#else
+    const LogLevel buildDefault = LogLevel::Warning;
+#endif
+
+    const QString configuredLevel = qEnvironmentVariable("KARATEAPP_LOG_LEVEL")
+        .trimmed()
+        .toLower();
+
+    if (configuredLevel == "critical")
+        return LogLevel::Critical;
+    if (configuredLevel == "error")
+        return LogLevel::Error;
+    if (configuredLevel == "warning" || configuredLevel == "warn")
+        return LogLevel::Warning;
+    if (configuredLevel == "info")
+        return LogLevel::Info;
+    if (configuredLevel == "debug")
+        return LogLevel::Debug;
+    if (configuredLevel == "trace")
+        return LogLevel::Trace;
+    if (configuredLevel == "all")
+        return LogLevel::All;
+
+    return buildDefault;
 }
 
 inline void setupLogger(int level) {

@@ -294,6 +294,16 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
             }
 
+            SourceAttribution {
+                width: parent.width
+                sourceName: newsView.currentSection === "results"
+                            ? "DJKB Wettkampfergebnisse"
+                            : "DJKB Aktuelle Meldungen"
+                sourceUrl: newsView.currentSection === "results"
+                           ? "https://www.djkb.com/aktuelles/wettkampfergebnisse/"
+                           : "https://www.djkb.com/aktuelles/aktuelle-meldungen/"
+            }
+
             Item {
                 width: 1
                 height: 10

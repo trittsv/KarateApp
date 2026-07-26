@@ -127,6 +127,15 @@ Page {
                 text: "Erneut versuchen"
                 onClicked: djkbGalleryScraper.loadYears()
             }
+
+            SourceAttribution {
+                width: parent.width
+                sourceName: "DJKB Bildergalerie"
+                sourceUrl: galleryYearsModel.count > 0
+                           ? galleryYearsModel.get(0).url
+                           : "https://www.djkb.com/bilder/"
+                             + new Date().getFullYear() + "/"
+            }
         }
     }
 }

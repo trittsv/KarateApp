@@ -26,11 +26,10 @@ GET /gallery/albums?url=https://www.djkb.com/bilder/2026/
 GET /gallery/photos?url=https://www.djkb.com/...
 ```
 
-App requests send these privacy-friendly headers so the backend can count
-approximate users and platforms:
+App requests send the platform so the backend can maintain anonymous,
+aggregated request counters:
 
 ```text
-X-KarateApp-Client-Id: random app installation UUID
 X-KarateApp-Platform: ios | android | macos | windows | linux
 ```
 
@@ -99,7 +98,7 @@ The SQLite database stores:
 
 ```text
 geocode_cache      normalized location -> latitude/longitude
-access_log         privacy-friendly backend usage counters
+access_counts      anonymous daily request counters
 ```
 
 Appointments and dojos are cached only in RAM for

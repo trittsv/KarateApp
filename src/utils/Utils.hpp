@@ -53,15 +53,10 @@ void setThreadName(const std::string& name) {
 void printDeviceInfo() {
     QSysInfo systemInfo;
     LOG_DEBUG << "Running Qt Version:" << qVersion();
-    LOG_DEBUG << "Boot unique id: " << systemInfo.bootUniqueId();
-    LOG_DEBUG << "Build Cpu Architecture: " << systemInfo.buildCpuArchitecture();
     LOG_DEBUG << "Current Cpu Architecture: " << systemInfo.currentCpuArchitecture();
     LOG_DEBUG << "Kernel Type: " << systemInfo.kernelType();
     LOG_DEBUG << "Kernel Version: " << systemInfo.kernelVersion();
-    LOG_DEBUG << "Machine Host Name: " << systemInfo.machineHostName();
-    LOG_DEBUG << "Machine Unique Id: " << systemInfo.machineUniqueId();
     LOG_DEBUG << "Product Type: " << systemInfo.productType();
     LOG_DEBUG << "Product Version: " << systemInfo.productVersion();
-    LOG_DEBUG << "Byte Order: " << systemInfo.buildAbi();
     LOG_DEBUG << "Pretty ProductName: " << systemInfo.prettyProductName();
 }

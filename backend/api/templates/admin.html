@@ -80,22 +80,20 @@
 
     <h2>Usage</h2>
     <dl>
-        <dt>Users total</dt><dd>{{ stats.total_users }}</dd>
-        <dt>Users last 24h</dt><dd>{{ stats.last_24h_users }}</dd>
         <dt>Requests total</dt><dd>{{ stats.total_requests }}</dd>
-        <dt>Requests last 24h</dt><dd>{{ stats.last_24h_requests }}</dd>
+        <dt>Requests today</dt><dd>{{ stats.today_requests }}</dd>
     </dl>
 
-    <h2>Devices</h2>
+    <h2>Platforms</h2>
     <table>
         <thead>
-            <tr><th>Platform</th><th>Users</th><th>Requests</th></tr>
+            <tr><th>Platform</th><th>Requests</th></tr>
         </thead>
         <tbody>
             {% for row in stats.by_platform %}
-                <tr><td>{{ row.platform }}</td><td>{{ row.users }}</td><td>{{ row.requests }}</td></tr>
+                <tr><td>{{ row.platform }}</td><td>{{ row.requests }}</td></tr>
             {% else %}
-                <tr><td colspan="3">No app requests yet</td></tr>
+                <tr><td colspan="2">No app requests yet</td></tr>
             {% endfor %}
         </tbody>
     </table>

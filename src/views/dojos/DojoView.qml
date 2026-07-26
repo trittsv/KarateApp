@@ -349,6 +349,13 @@ Page {
                 })
             }
 
+            footer: SourceAttribution {
+                width: dojoList.width - dojoList.leftMargin
+                       - dojoList.rightMargin
+                sourceName: "DJKB Dojo-Verzeichnis"
+                sourceUrl: "https://www.djkb.com/jka-in-deutschland/djkb-dojos/"
+            }
+
             Label {
                 anchors.centerIn: parent
                 visible: !backendApiClient.dojoLoading && dojoList.count === 0

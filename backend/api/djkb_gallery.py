@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from urllib.parse import urljoin
 
 import requests
@@ -8,8 +9,22 @@ from html_utils import absolutize, find_href, find_raw, find_text, html_decode
 
 
 def load_gallery_years():
-    response = requests.get(urljoin(DJKB_BASE_URL, "/bilder/2026/"), headers=DJKB_HEADERS, timeout=REQUEST_TIMEOUT_SECONDS)
-    response.raise_for_status()
+    response = None
+    for year in range(date.today().year, date.today().year - 3, -1):
+        candidate = requests.get(
+            urljoin(DJKB_BASE_URL, f"/bilder/{year}/"),
+            headers=DJKB_HEADERS,
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+        if candidate.status_code == 404:
+            continue
+        candidate.raise_for_status()
+        response = candidate
+        break
+
+    if response is None:
+        raise RuntimeError("Keine aktuelle DJKB-Bildergalerie gefunden")
+
     result = []
     seen = set()
     for match in re.finditer(r'<a[^>]+href="(/bilder/(\d{4})/)"[^>]*>\s*\2\s*</a>', response.text):
