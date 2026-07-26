@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.16)
 
 set(QT_CREATOR_SKIP_CONAN_SETUP ON)
 
-project(KarateApp VERSION 1.0.0 LANGUAGES CXX)
-set(KARATEAPP_ANDROID_VERSION_CODE 1) # Increment for each version
+project(KarateApp VERSION 1.1.0 LANGUAGES CXX)
+set(KARATEAPP_ANDROID_VERSION_CODE 2) # Increment for each version
 set(KARATEAPP_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
@@ -191,7 +191,7 @@ elseif(ANDROID)
     FetchContent_Declare(
       android_openssl
       DOWNLOAD_EXTRACT_TIMESTAMP true
-      URL      https://github.com/KDAB/android_openssl/archive/8cd5e081af4e84cdff0ddc0d17b1fe90672a4d69.zip
+      URL      https://github.com/KDAB/android_openssl/archive/b71f1470962019bd89534a2919f5925f93bc5779.zip
     )
     FetchContent_MakeAvailable(android_openssl)
     include(${android_openssl_SOURCE_DIR}/android_openssl.cmake)
