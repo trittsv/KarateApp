@@ -30,7 +30,11 @@
     <string></string>
 
     <key>CFBundleDevelopmentRegion</key>
-    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <string>de</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>de</string>
+    </array>
     <key>CFBundleAllowMixedLocalizations</key>
     <true/>
 
