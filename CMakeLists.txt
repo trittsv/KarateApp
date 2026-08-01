@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(QT_CREATOR_SKIP_CONAN_SETUP ON)
 
-project(KarateApp VERSION 1.1.1 LANGUAGES CXX)
+project(KarateApp VERSION 1.1.2 LANGUAGES CXX)
 set(KARATEAPP_ANDROID_VERSION_CODE 3) # Increment for each version
 set(KARATEAPP_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}")
 
