@@ -94,7 +94,8 @@ def home():
         {
             "label": "iOS",
             "detail": "App Store",
-            "url": os.environ.get("KARATEAPP_IOS_STORE_URL", ""),
+            "url": os.environ.get("KARATEAPP_IOS_STORE_URL")
+            or "https://apps.apple.com/app/karateapp/id6770331396",
         },
     ]
     return render_template(
