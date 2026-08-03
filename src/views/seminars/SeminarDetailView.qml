@@ -27,6 +27,8 @@ Page {
     required property string icsUrl
     required property string mapsUrl
 
+    Component.onDestruction: ApplicationHelper.requestAppReview()
+
     background: Rectangle {
         color: Constants.backgroundColor(rootWindow.isDarkMode)
     }

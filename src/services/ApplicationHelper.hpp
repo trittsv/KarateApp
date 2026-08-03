@@ -12,4 +12,5 @@ public:
     explicit ApplicationHelper(QObject *parent = nullptr);
 
     Q_INVOKABLE void moveToBackground();
+    Q_INVOKABLE void requestAppReview();
 };

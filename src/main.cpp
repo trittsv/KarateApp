@@ -125,6 +125,8 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("KARATEAPP_VERSION", KARATEAPP_VERSION);
     engine.rootContext()->setContextProperty("KARATEAPP_BUILD_DATE", KARATEAPP_BUILD_DATE);
     engine.rootContext()->setContextProperty("KARATEAPP_GIT_COMMIT", KARATEAPP_GIT_COMMIT);
+    engine.rootContext()->setContextProperty("KARATEAPP_APP_STORE_ID", KARATEAPP_APP_STORE_ID);
+    engine.rootContext()->setContextProperty("KARATEAPP_GOOGLE_PLAY_APP_ID", KARATEAPP_GOOGLE_PLAY_APP_ID);
     engine.rootContext()->setContextProperty("KARATEAPP_QT_VERSION", QString::fromLatin1(qVersion()));
     engine.rootContext()->setContextProperty("KARATEAPP_SYSTEM_INFO", systemInfo);
     engine.rootContext()->setContextProperty("seminarModel", &seminarModel);

@@ -8,6 +8,10 @@
 #include <QJniObject>
 #endif
 
+#ifdef Q_OS_IOS
+void requestNativeAppReview();
+#endif
+
 ApplicationHelper::ApplicationHelper(QObject *parent)
     : QObject(parent) {
 }
@@ -21,5 +25,11 @@ void ApplicationHelper::moveToBackground() {
         if (activity.isValid())
             activity.callMethod<jboolean>("moveTaskToBack", jboolean(true));
     });
+#endif
+}
+
+void ApplicationHelper::requestAppReview() {
+#ifdef Q_OS_IOS
+    requestNativeAppReview();
 #endif
 }
