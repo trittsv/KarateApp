@@ -201,6 +201,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 elseif(ANDROID)
     set(QT_ANDROID_SIGN_APK ON) # make sure the env variables are set!
+    set(QT_ANDROID_SIGN_AAB ON)
 
     # Add Android-Qt OpenSSL Support
     # https://doc.qt.io/qt-6/android-openssl-support.html#using-openssl-libraries-with-qt-for-android

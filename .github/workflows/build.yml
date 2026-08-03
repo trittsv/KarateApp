@@ -14,6 +14,10 @@ jobs:
   android:
     name: Android
     runs-on: macos-14
+    env:
+      QT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}
+      QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
+      QT_ANDROID_KEYSTORE_KEY_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_KEY_PASS }}
 
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +48,13 @@ jobs:
         run: |
           echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/android_arm64_v8a" >> "$GITHUB_ENV"
           echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+
+      - name: Restore Android keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -D > "$RUNNER_TEMP/android_release.keystore"
+          echo "QT_ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/android_release.keystore" >> "$GITHUB_ENV"
 
       - name: Configure Android
         run: |
@@ -86,7 +97,9 @@ jobs:
           GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
 
       - name: Build
-        run: cmake --build build-android --config Release --parallel
+        run: |
+          cmake --build build-android --config Release --parallel
+          cmake --build build-android --config Release --target aab --parallel
 
       - uses: actions/upload-artifact@v4
         with:
