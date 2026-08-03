@@ -308,6 +308,7 @@ jobs:
             -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
             -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
             -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+            -DQt6BundledPcre2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledPcre2" \
             -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
             -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
             -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
