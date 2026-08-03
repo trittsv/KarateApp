@@ -320,6 +320,7 @@ jobs:
             -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
             -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
             -DQt6EntryPointPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6EntryPointPrivate" \
+            -DQt6Svg_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Svg" \
             -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
         env:
           THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
