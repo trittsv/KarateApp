@@ -101,6 +101,32 @@ Page {
             }
 
             NavigationTile {
+                title: "App bewerten"
+                description: Qt.platform.os === "android"
+                             ? "Bei Google Play bewerten"
+                             : "Im App Store bewerten"
+                iconSource: "qrc:/KarateApp/res/icons/rating.svg"
+                visible: Qt.platform.os === "android"
+                         || (Qt.platform.os === "ios"
+                             && KARATEAPP_APP_STORE_ID !== "")
+                onClicked: {
+                    if (Qt.platform.os === "android") {
+                        Qt.openUrlExternally(
+                            "https://play.google.com/store/apps/details"
+                            + "?id=" + KARATEAPP_GOOGLE_PLAY_APP_ID
+                            + "&showAllReviews=true"
+                        )
+                    } else if (Qt.platform.os === "ios") {
+                        Qt.openUrlExternally(
+                            "https://apps.apple.com/app/id"
+                            + KARATEAPP_APP_STORE_ID
+                            + "?action=write-review"
+                        )
+                    }
+                }
+            }
+
+            NavigationTile {
                 title: "Rechtliches und Datenschutz"
                 description: "Datenschutz, Impressum und Lizenzen"
                 iconSource: "qrc:/KarateApp/res/icons/info.svg"

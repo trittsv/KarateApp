@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.16)
 
 set(QT_CREATOR_SKIP_CONAN_SETUP ON)
 
-project(KarateApp VERSION 1.1.4 LANGUAGES CXX)
-set(KARATEAPP_ANDROID_VERSION_CODE 6) # Increment for each version
+project(KarateApp VERSION 1.2.0 LANGUAGES CXX)
+set(KARATEAPP_ANDROID_VERSION_CODE 7) # Increment for each version
 set(KARATEAPP_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
@@ -57,6 +57,16 @@ if(NOT KARATEAPP_THUNDERFOREST_API_KEY)
     message(WARNING "THUNDERFOREST_API_KEY is not set. Map tiles may not load.")
 endif()
 
+set(KARATEAPP_APP_STORE_ID "$ENV{APP_STORE_ID}")
+if(NOT KARATEAPP_APP_STORE_ID)
+    message(FATAL_ERROR "APP_STORE_ID is not set. Set it to the numeric Apple App Store ID.")
+endif()
+
+set(KARATEAPP_GOOGLE_PLAY_APP_ID "$ENV{GOOGLE_PLAY_APP_ID}")
+if(NOT KARATEAPP_GOOGLE_PLAY_APP_ID)
+    message(FATAL_ERROR "GOOGLE_PLAY_APP_ID is not set. Set it to the Android application ID.")
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/version.h.in ${CMAKE_BINARY_DIR}/version.h)
 
 set(SOURCES
@@ -100,6 +110,7 @@ if(APPLE)
     if(IOS)
         list(APPEND SOURCES
             src/services/ClipboardHelper.mm
+            src/services/ApplicationHelper.mm
         )
     # Non-iOS but Apple
     else()
@@ -173,6 +184,7 @@ qt_add_resources(KarateApp "KarateApp"
         res/icons/more.svg
         res/icons/gallery.svg
         res/icons/feedback.svg
+        res/icons/rating.svg
         res/apple/iOS/iPhone_180.png
 
         # Json
@@ -207,7 +219,7 @@ elseif(ANDROID)
         QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/android
     )
     set_property(TARGET KarateApp PROPERTY
-        QT_ANDROID_PACKAGE_NAME trittsv.app.karateapp
+        QT_ANDROID_PACKAGE_NAME ${KARATEAPP_GOOGLE_PLAY_APP_ID}
     )
 endif()
 
@@ -232,6 +244,12 @@ if(ANDROID)
         ${log-lib}
     )
 elseif(APPLE)
+    if(IOS)
+        find_library(STOREKIT_FRAMEWORK StoreKit REQUIRED)
+        list(APPEND PLATFORM_LINK_LIBS
+            "${STOREKIT_FRAMEWORK}"
+        )
+    endif()
     list(APPEND PLATFORM_LINK_LIBS
     )
 elseif(WIN32)
