@@ -187,6 +187,10 @@ jobs:
             -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
             -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
             -DCMAKE_PREFIX_PATH="$Qt6_DIR"
+        env:
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+          GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
 
       - name: Build
         run: cmake --build build-macos --config Release --parallel
