@@ -24,13 +24,15 @@ jobs:
           java-version: "17"
 
       - name: Install Qt Android
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          target: android
-          arch: android_arm64_v8a
-          modules: qtwebview qtpositioning qtlocation qtpdf
-          cache: true
+        run: |
+          echo "::add-mask::$QT_ARCHIVE_URL"
+          curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
+          mkdir -p "$RUNNER_TEMP/Qt"
+          tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
+          echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/android_arm64_v8a" >> "$GITHUB_ENV"
+          echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+        env:
+          QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
 
       - name: Configure Android
         run: |
@@ -65,6 +67,10 @@ jobs:
             -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
             -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
             -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+        env:
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+          GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
 
       - name: Build
         run: cmake --build build-android --config Release --parallel
