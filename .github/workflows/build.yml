@@ -308,7 +308,14 @@ jobs:
             -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
             -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
             -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+            -DQt6BundledFreetype_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledFreetype" \
+            -DQt6BundledHarfbuzz_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledHarfbuzz" \
+            -DQt6BundledLibjpeg_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledLibjpeg" \
+            -DQt6BundledLibpng_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledLibpng" \
             -DQt6BundledPcre2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6BundledPcre2" \
+            -DQt6Bundled_Clip2Tri_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Bundled_Clip2Tri" \
+            -DQt6Bundled_Clipper_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Bundled_Clipper" \
+            -DQt6Bundled_Poly2Tri_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Bundled_Poly2Tri" \
             -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
             -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
             -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
