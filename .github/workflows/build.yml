@@ -287,7 +287,35 @@ jobs:
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_SYSROOT=iphoneos \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DQT_HOST_PATH="$QT_HOST_PATH" \
+            -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
+            -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
+            -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
+            -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
+            -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
+            -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
+            -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
+            -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
+            -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
+            -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
+            -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
+            -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
+            -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
+            -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
+            -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
+            -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
+            -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
+            -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
+            -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
+            -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+            -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
+            -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
+            -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
             -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+        env:
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+          GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
 
       - name: Build
         run: |
