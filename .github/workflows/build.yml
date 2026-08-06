@@ -28,27 +28,38 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Cache Qt
-        id: qt-cache
-        uses: actions/cache@v4
+      - name: Install Qt Android
+        uses: jurplel/install-qt-action@v4
         with:
-          path: ${{ runner.temp }}/Qt
-          key: qt-${{ env.QT_VERSION }}
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: android
+          arch: android_arm64_v8a
+          modules: qtwebview qtpositioning qtlocation qtpdf
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
+          cache: true
 
-      - name: Install Qt
-        if: steps.qt-cache.outputs.cache-hit != 'true'
-        run: |
-          echo "::add-mask::$QT_ARCHIVE_URL"
-          curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
-          mkdir -p "$RUNNER_TEMP/Qt"
-          tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
-        env:
-          QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
+      # - name: Cache Qt
+      #   id: qt-cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ runner.temp }}/Qt
+      #     key: qt-${{ env.QT_VERSION }}
 
-      - name: Set Qt paths
-        run: |
-          echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/android_arm64_v8a" >> "$GITHUB_ENV"
-          echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+      # - name: Install Qt
+      #   if: steps.qt-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     echo "::add-mask::$QT_ARCHIVE_URL"
+      #     curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
+      #     mkdir -p "$RUNNER_TEMP/Qt"
+      #     tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
+      #   env:
+      #     QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
+
+      # - name: Set Qt paths
+      #   run: |
+      #     echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/android_arm64_v8a" >> "$GITHUB_ENV"
+      #     echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
 
       - name: Restore Android keystore
         env:
@@ -234,27 +245,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Qt
-        id: qt-cache
-        uses: actions/cache@v4
+      - name: Install Qt iOS
+        uses: jurplel/install-qt-action@v4
         with:
-          path: ${{ runner.temp }}/Qt
-          key: qt-${{ env.QT_VERSION }}
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: ios
+          modules: qtwebview qtpositioning qtlocation qtpdf
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
+          cache: true
 
-      - name: Install Qt
-        if: steps.qt-cache.outputs.cache-hit != 'true'
-        run: |
-          echo "::add-mask::$QT_ARCHIVE_URL"
-          curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
-          mkdir -p "$RUNNER_TEMP/Qt"
-          tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
-        env:
-          QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
+      # - name: Cache Qt
+      #   id: qt-cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ runner.temp }}/Qt
+      #     key: qt-${{ env.QT_VERSION }}
 
-      - name: Set Qt paths
-        run: |
-          echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/ios" >> "$GITHUB_ENV"
-          echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+      # - name: Install Qt
+      #   if: steps.qt-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     echo "::add-mask::$QT_ARCHIVE_URL"
+      #     curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
+      #     mkdir -p "$RUNNER_TEMP/Qt"
+      #     tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
+      #   env:
+      #     QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
+
+      # - name: Set Qt paths
+      #   run: |
+      #     echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/ios" >> "$GITHUB_ENV"
+      #     echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
 
       - name: Configure
         run: |
