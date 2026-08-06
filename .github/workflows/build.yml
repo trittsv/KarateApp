@@ -3,78 +3,112 @@ name: Build
 on:
   push:
     branches: [ main ]
+    tags: [ "*" ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 env:
   QT_VERSION: "6.11.1"
+  QT_MODULES: "qtwebview qtpositioning qtlocation qtpdf"
 
 jobs:
-  # android:
-  #   name: Android
-  #   runs-on: ubuntu-24.04
+  android:
+    name: Android
+    runs-on: macos-14
+    env:
+      QT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}
+      QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
+      QT_ANDROID_KEYSTORE_KEY_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_KEY_PASS }}
 
-  #   steps:
-  #     - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - uses: actions/setup-java@v4
-  #       with:
-  #         distribution: temurin
-  #         java-version: "17"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
 
-  #     - name: Install Qt Android
-  #       uses: jurplel/install-qt-action@v4
-  #       with:
-  #         version: ${{ env.QT_VERSION }}
-  #         target: android
-  #         arch: android_arm64_v8a
-  #         modules: qtwebview qtpositioning qtlocation qtpdf
-  #         cache: true
+      - name: Install Qt Android
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: android
+          arch: android_arm64_v8a
+          modules: ${{ env.QT_MODULES }}
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
+          cache: true
 
-  #     - name: Configure Android
-  #       run: |
-  #         cmake -S . -B build-android \
-  #           -DCMAKE_BUILD_TYPE=Release \
-  #           -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
-  #           -DANDROID_ABI=arm64-v8a \
-  #           -DANDROID_PLATFORM=android-23 \
-  #           -DANDROID_NDK="$ANDROID_NDK_HOME" \
-  #           -DQT_HOST_PATH="$QT_HOST_PATH" \
-  #           -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
-  #           -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
-  #           -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
-  #           -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
-  #           -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
-  #           -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
-  #           -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
-  #           -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
-  #           -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
-  #           -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
-  #           -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
-  #           -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
-  #           -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
-  #           -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
-  #           -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
-  #           -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
-  #           -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
-  #           -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
-  #           -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
-  #           -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
-  #           -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
-  #           -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
-  #           -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
-  #           -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+      # - name: Cache Qt
+      #   id: qt-cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ runner.temp }}/Qt
+      #     key: qt-${{ env.QT_VERSION }}
 
-  #     - name: Build
-  #       run: cmake --build build-android --config Release --parallel
+      # - name: Install Qt
+      #   if: steps.qt-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     echo "::add-mask::$QT_ARCHIVE_URL"
+      #     curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
+      #     mkdir -p "$RUNNER_TEMP/Qt"
+      #     tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
+      #   env:
+      #     QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: android-build
-  #         path: |
-  #           build-android/**/*.apk
-  #           build-android/**/*.aab
+      # - name: Set Qt paths
+      #   run: |
+      #     echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/android_arm64_v8a" >> "$GITHUB_ENV"
+      #     echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+
+      - name: Restore Android keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -D > "$RUNNER_TEMP/android_release.keystore"
+          echo "QT_ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/android_release.keystore" >> "$GITHUB_ENV"
+
+      - name: Configure Android
+        run: |
+          cmake -S . -B build-android \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="$QT_ROOT_DIR/lib/cmake/Qt6/qt.toolchain.cmake" \
+            -DQT_CHAINLOAD_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
+            -DQT_HOST_PATH="$QT_HOST_PATH" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-23 \
+            -DANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}" \
+            -DANDROID_NDK_ROOT="$ANDROID_NDK_HOME"
+        env:
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+          GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
+
+      - name: Build
+        run: |
+          cmake --build build-android --config Release --parallel
+          cmake --build build-android --config Release --target aab --parallel
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: |
+            build-android/**/build/outputs/apk/release/*.apk
+            build-android/**/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
+
+      - name: Upload AAB to Google Play
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ secrets.GOOGLE_PLAY_APP_ID }}
+          releaseFiles: build-android/**/build/outputs/bundle/release/*.aab
+          track: production
+          status: draft
 
   # windows:
   #   name: Windows
@@ -140,100 +174,133 @@ jobs:
   #         path: |
   #           build/package/*.zip
 
-  macos:
-    name: macOS
-    runs-on: macos-14
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Qt macOS
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: mac
-          target: desktop
-          arch: clang_64
-          modules: qtwebview qtpositioning qtlocation qtpdf
-          cache: true
-
-      - name: Configure
-        run: |
-          cmake -S . -B build-macos \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX="$PWD/build-macos/install" \
-            -DQT_HOST_PATH="$QT_HOST_PATH" \
-            -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
-            -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
-            -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
-            -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
-            -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
-            -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
-            -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
-            -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
-            -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
-            -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
-            -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
-            -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
-            -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
-            -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
-            -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
-            -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
-            -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
-            -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
-            -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
-            -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
-            -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
-            -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
-            -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
-            -DCMAKE_PREFIX_PATH="$Qt6_DIR"
-
-      - name: Build
-        run: cmake --build build-macos --config Release --parallel
-
-      - name: Package
-        run: |
-          cpack --config build-macos/CPackConfig.cmake -C Release
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-arm64-build
-          path: |
-            build-macos/package/*.zip
-
-  # ios:
-  #   name: iOS
+  # macos:
+  #   name: macOS
   #   runs-on: macos-14
 
   #   steps:
   #     - uses: actions/checkout@v4
 
-  #     - name: Install Qt iOS
+  #     - name: Install Qt macOS
   #       uses: jurplel/install-qt-action@v4
   #       with:
   #         version: ${{ env.QT_VERSION }}
   #         host: mac
-  #         target: ios
+  #         target: desktop
+  #         arch: clang_64
   #         modules: qtwebview qtpositioning qtlocation qtpdf
   #         cache: true
 
   #     - name: Configure
   #       run: |
-  #         cmake -S . -B build-ios \
-  #           -GXcode \
-  #           -DCMAKE_SYSTEM_NAME=iOS \
-  #           -DCMAKE_OSX_SYSROOT=iphoneos \
-  #           -DCMAKE_OSX_ARCHITECTURES=arm64 \
+  #         cmake -S . -B build-macos \
+  #           -DCMAKE_BUILD_TYPE=Release \
+  #           -DCMAKE_INSTALL_PREFIX="$PWD/build-macos/install" \
+  #           -DQT_HOST_PATH="$QT_HOST_PATH" \
+  #           -DQt6_DIR="$QT_ROOT_DIR/lib/cmake/Qt6" \
+  #           -DQt6Concurrent_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Concurrent" \
+  #           -DQt6Core_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Core" \
+  #           -DQt6Gui_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Gui" \
+  #           -DQt6Location_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Location" \
+  #           -DQt6Network_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Network" \
+  #           -DQt6OpenGL_DIR="$QT_ROOT_DIR/lib/cmake/Qt6OpenGL" \
+  #           -DQt6PdfQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PdfQuick" \
+  #           -DQt6Pdf_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Pdf" \
+  #           -DQt6PositioningQuick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6PositioningQuick " \
+  #           -DQt6Positioning_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Positioning" \
+  #           -DQt6QmlAssetDownloaderPrivate_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlAssetDownloaderPrivate" \
+  #           -DQt6QmlIntegration_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlIntegration" \
+  #           -DQt6QmlMeta_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlMeta" \
+  #           -DQt6QmlModels_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlModels" \
+  #           -DQt6QmlWorkerScript_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QmlWorkerScript" \
+  #           -DQt6Qml_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Qml" \
+  #           -DQt6QuickControls2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickControls2" \
+  #           -DQt6QuickShapes_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickShapes" \
+  #           -DQt6QuickTemplates2_DIR="$QT_ROOT_DIR/lib/cmake/Qt6QuickTemplates2" \
+  #           -DQt6Quick_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Quick" \
+  #           -DQt6WebView_DIR="$QT_ROOT_DIR/lib/cmake/Qt6WebView" \
+  #           -DQt6Widgets_DIR="$QT_ROOT_DIR/lib/cmake/Qt6Widgets" \
   #           -DCMAKE_PREFIX_PATH="$Qt6_DIR"
+  #       env:
+  #         THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+  #         APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+  #         GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
 
   #     - name: Build
+  #       run: cmake --build build-macos --config Release --parallel
+
+  #     - name: Package
   #       run: |
-  #         cmake --build build-ios --config Release --parallel
+  #         cpack --config build-macos/CPackConfig.cmake -C Release
 
   #     - uses: actions/upload-artifact@v4
   #       with:
-  #         name: ios-build
+  #         name: macos-arm64-build
   #         path: |
-  #           build-ios/**/*.app
-  #           build-ios/**/*.ipa
-  #           build-ios/**/*.xcarchive
+  #           build-macos/package/*.zip
+
+  ios:
+    name: iOS
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt iOS
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: ios
+          modules: ${{ env.QT_MODULES }}
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
+          cache: true
+
+      # - name: Cache Qt
+      #   id: qt-cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ runner.temp }}/Qt
+      #     key: qt-${{ env.QT_VERSION }}
+
+      # - name: Install Qt
+      #   if: steps.qt-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     echo "::add-mask::$QT_ARCHIVE_URL"
+      #     curl -fL "$QT_ARCHIVE_URL" -o "$RUNNER_TEMP/$QT_VERSION.tar.gz"
+      #     mkdir -p "$RUNNER_TEMP/Qt"
+      #     tar -xzf "$RUNNER_TEMP/$QT_VERSION.tar.gz" -C "$RUNNER_TEMP/Qt"
+      #   env:
+      #     QT_ARCHIVE_URL: ${{ secrets.QT_ARCHIVE_URL }}
+
+      # - name: Set Qt paths
+      #   run: |
+      #     echo "QT_ROOT_DIR=$RUNNER_TEMP/Qt/$QT_VERSION/ios" >> "$GITHUB_ENV"
+      #     echo "QT_HOST_PATH=$RUNNER_TEMP/Qt/$QT_VERSION/macos" >> "$GITHUB_ENV"
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-ios \
+            -GXcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_SYSROOT=iphoneos \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
+            -DCMAKE_TOOLCHAIN_FILE="$QT_ROOT_DIR/lib/cmake/Qt6/qt.toolchain.cmake" \
+            -DQT_HOST_PATH="$QT_HOST_PATH"
+        env:
+          THUNDERFOREST_API_KEY: ${{ secrets.THUNDERFOREST_API_KEY }}
+          APP_STORE_ID: ${{ secrets.APP_STORE_ID }}
+          GOOGLE_PLAY_APP_ID: ${{ secrets.GOOGLE_PLAY_APP_ID }}
+
+      - name: Build
+        run: |
+          cmake --build build-ios --config Release --parallel
+
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ios-build
+      #     path: |
+      #       build-ios/**/*.app
+      #       build-ios/**/*.ipa
+      #       build-ios/**/*.xcarchive

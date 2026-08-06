@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.16)
 set(QT_CREATOR_SKIP_CONAN_SETUP ON)
 
 project(KarateApp VERSION 1.2.0 LANGUAGES CXX)
-set(KARATEAPP_ANDROID_VERSION_CODE 7) # Increment for each version
+set(KARATEAPP_ANDROID_VERSION_CODE 8) # Increment for each version
 set(KARATEAPP_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
@@ -54,7 +54,7 @@ string(TIMESTAMP KARATEAPP_BUILD_DATE "%Y-%m-%d %H:%M UTC" UTC)
 
 set(KARATEAPP_THUNDERFOREST_API_KEY "$ENV{THUNDERFOREST_API_KEY}")
 if(NOT KARATEAPP_THUNDERFOREST_API_KEY)
-    message(WARNING "THUNDERFOREST_API_KEY is not set. Map tiles may not load.")
+    message(FATAL_ERROR "THUNDERFOREST_API_KEY is not set. Map tiles may not load.")
 endif()
 
 set(KARATEAPP_APP_STORE_ID "$ENV{APP_STORE_ID}")
@@ -201,6 +201,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 elseif(ANDROID)
     set(QT_ANDROID_SIGN_APK ON) # make sure the env variables are set!
+    set(QT_ANDROID_SIGN_AAB ON)
 
     # Add Android-Qt OpenSSL Support
     # https://doc.qt.io/qt-6/android-openssl-support.html#using-openssl-libraries-with-qt-for-android
