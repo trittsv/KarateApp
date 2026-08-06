@@ -10,6 +10,7 @@ on:
 
 env:
   QT_VERSION: "6.11.1"
+  QT_MODULES: "qtwebview qtpositioning qtlocation qtpdf"
 
 jobs:
   android:
@@ -35,7 +36,7 @@ jobs:
           host: all_os
           target: android
           arch: android_arm64_v8a
-          modules: qtwebview qtpositioning qtlocation qtpdf
+          modules: ${{ env.QT_MODULES }}
           aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
           cache: true
 
@@ -251,7 +252,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           host: all_os
           target: ios
-          modules: qtwebview qtpositioning qtlocation qtpdf
+          modules: ${{ env.QT_MODULES }}
           aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
           cache: true
 
